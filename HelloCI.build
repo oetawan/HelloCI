@@ -73,7 +73,7 @@
             HtmlReportDir="@(CoverageReportDir)" />
   </Target>
   
-  <Target Name="FxCop" DependsOnTargets="Compile">
+  <Target Name="FxCop" DependsOnTargets="Test">
     <Exec Command="@(FxCop) /file:@(AssembliesToAnalyze) /out:@(AnalysisReport) /directory:@(ReferencedAssemblies)" />
   </Target>
   
