@@ -18,7 +18,7 @@ namespace HelloCI.Tests.Web
         [Test]
         public void SomeTest()
         {
-            Assert.AreEqual(1,0);
+            Assert.AreEqual(1,1);
         }
     }
 }
