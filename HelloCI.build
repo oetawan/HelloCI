@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
          ToolsVersion="4.0"
-         DefaultTargets="Compile" >
+         DefaultTargets="Test" >
   
   <UsingTask AssemblyFile=".\thirdparty\tools\MSBuildAsyncExec\AsyncExec.dll" TaskName="AsyncExec.AsyncExec" />
   
@@ -14,12 +14,27 @@
     <SolutionFile Include=".\HelloCI.sln" />
     <Cassini Include="$(CommonProgramFiles)\microsoft shared\DevServer\11.0\WebDev.WebServer40.EXE" />
     <Website Include=".\buildartifacts\_PublishedWebsites\HelloCI.Web" />
+    <SolutionRoot Include="."/>
   </ItemGroup>
   
   <ItemGroup>
     <NUnit Include=".\thirdparty\tools\NUnit\nunit-console.exe" />
     <TestAssembly Include=".\buildartifacts\HelloCI.Tests.dll" />
     <TestResults Include=".\buildartifacts\TestResults.xml" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <NCoverPath Include=".\thirdparty\tools\NCover"/>
+    <NCoverCoverage Include=".\buildartifacts\coverage.nccov"/>
+    <NCoverTrend Include=".\buildartifacts\coverage.trend"/>
+    <CoverageReportDir Include=".\buildartifacts\coverage\"/>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <FxCop Include=".\thirdparty\tools\FxCop\FxCopCmd.exe"/>
+    <AssembliesToAnalyze Include=".\buildartifacts\_PublishedWebsites\HelloCI.Web\bin\HelloCI.Web.dll"/>
+    <ReferencedAssemblies Include=".\packages\DotNetOpenAuth.AspNet.4.1.4.12333\lib\net40-full\"/>
+    <AnalysisReport Include=".\buildartifacts\FxCopAnalysis.xml" />
   </ItemGroup>
 
   <Target Name="Clean">
@@ -44,6 +59,22 @@
   
   <Target Name="Test" DependsOnTargets="Compile">
     <Exec Command="@(NUnit) @(TestAssembly) /xml=@(TestResults)" />
+  </Target>
+  
+  <Target Name="TestWithCoverage" DependsOnTargets="Compile">
+    <NCover TestRunnerExe="@(NUnit)"
+            TestRunnerArgs="@(TestAssembly) /xml=@(TestResults)"
+            ToolPath="@(NCoverPath)"
+            WorkingDirectory="@(SolutionRoot)"
+            CoverageFile="@(NCoverCoverage)"
+            AppendTrendTo="@(NCoverTrend)"
+            IncludeAssemblies="$(CoveredAssemblies)"
+            ProjectName="HelloCI"
+            HtmlReportDir="@(CoverageReportDir)" />
+  </Target>
+  
+  <Target Name="FxCop" DependsOnTargets="Compile">
+    <Exec Command="@(FxCop) /file:@(AssembliesToAnalyze) /out:@(AnalysisReport) /directory:@(ReferencedAssemblies)" />
   </Target>
   
 </Project>
