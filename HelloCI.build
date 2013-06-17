@@ -41,6 +41,10 @@
     <MsDeploy Include=".\thirdparty\tools\Microsoft Web Deploy\msdeploy.exe"/>
     <PackageFile Include=".\buildartifacts\package\HelloCI.zip"/>
   </ItemGroup>
+  
+  <PropertyGroup>
+    <WebServerName>192.168.1.3</WebServerName>
+  </PropertyGroup>
 
   <Target Name="Clean">
     <RemoveDir Directories="@(BuildArtifacts)" />
@@ -90,6 +94,13 @@
     </PropertyGroup>
     <MakeDir Directories="$(PackageDir)"/>
     <Exec Command='"@(MsDeploy)" -verb:sync -source:iisApp="$(Source)" -dest:package="$(Destination)"' />
+  </Target>
+  
+  <Target Name="Deploy" DependsOnTargets="Package">
+    <PropertyGroup>
+      <Source>%(PackageFile.FullPath)</Source>
+    </PropertyGroup>
+    <Exec Command='"@(MsDeploy)" -verb:sync -source:package="$(Source)" -dest:iisApp=HelloCI,computerName=$(WebServerName),username=Oetawan,password=18022010,authType=Basic' />
   </Target>
 
 </Project>
