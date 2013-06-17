@@ -36,6 +36,11 @@
     <ReferencedAssemblies Include=".\packages\DotNetOpenAuth.AspNet.4.1.4.12333\lib\net40-full\"/>
     <AnalysisReport Include=".\buildartifacts\FxCopAnalysis.xml" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <MsDeploy Include=".\thirdparty\tools\Microsoft Web Deploy\msdeploy.exe"/>
+    <PackageFile Include=".\buildartifacts\package\HelloCI.zip"/>
+  </ItemGroup>
 
   <Target Name="Clean">
     <RemoveDir Directories="@(BuildArtifacts)" />
@@ -76,5 +81,15 @@
   <Target Name="FxCop" DependsOnTargets="Test">
     <Exec Command="@(FxCop) /file:@(AssembliesToAnalyze) /out:@(AnalysisReport) /directory:@(ReferencedAssemblies)" />
   </Target>
-  
+
+  <Target Name="Package" DependsOnTargets="Test">
+    <PropertyGroup>
+      <PackageDir>%(PackageFile.RootDir)%(PackageFile.Directory)</PackageDir>
+      <Source>%(Website.FullPath)</Source>
+      <Destination>%(PackageFile.FullPath)</Destination>
+    </PropertyGroup>
+    <MakeDir Directories="$(PackageDir)"/>
+    <Exec Command='"@(MsDeploy)" -verb:sync -source:iisApp="$(Source)" -dest:package="$(Destination)"' />
+  </Target>
+
 </Project>
