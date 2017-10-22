@@ -1,1 +1,1 @@
-echo "Deployed"
+thirdparty\tools\Microsoft Web Deploy
