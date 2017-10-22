@@ -6,5 +6,10 @@ pipeline {
                 bat 'built'
             }
         }
+        stage('Deploy') {
+            steps {
+                bat 'deploy'
+            }
+        }
     }
 }
