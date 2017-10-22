@@ -65,10 +65,6 @@
       <Project>{19211bcc-53fa-4fdc-a80b-ca06b4910036}</Project>
       <Name>HelloCI.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\app\HelloCI.Web\HelloCI.Web.csproj">
-      <Project>{adf01849-94d3-4494-bd78-cca6ac157458}</Project>
-      <Name>HelloCI.Web</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
